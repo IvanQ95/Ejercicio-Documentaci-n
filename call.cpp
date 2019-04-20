@@ -17,8 +17,8 @@ byte CallGSM::CallStatus(void)
      gsm.SetCommLineStatus(CLS_ATCMD);
      gsm.SimpleWriteln(F("AT+CPAS"));
 
-     // 5 segundos de espera para la comunicación inicial.
-     // 50 msegundos de espera entre caracteres.
+          // 5 segundos de espera para el inicio de la comunicación..
+          // 50 msegundos de espera entre caracteres.
       
      if (RX_TMOUT_ERR == gsm.WaitResp(5000, 50)) {
           // No se recibió nada (RX_TMOUT_ERR)
@@ -94,72 +94,71 @@ byte CallGSM::CallStatusWithAuth(char *phone_number,
      char *p_char;
      char *p_char1;
 
-     phone_number[0] = 0x00;  // no phonr number so far
+     phone_number[0] = 0x00;  // No hay número de teléfono hasta ahora.
      if (CLS_FREE != gsm.GetCommLineStatus()) return (CALL_COMM_LINE_BUSY);
      gsm.SetCommLineStatus(CLS_ATCMD);
      gsm.SimpleWriteln(F("AT+CLCC"));
 
-     // 5 sec. for initial comm tmout
-     // and max. 1500 msec. for inter character timeout
+                  // 5 segundos de espera para el inicio de la comunicación.
+                  // Además hay un tiempo máximo de 1500 msegundos de espera entre caracteres.
      gsm.RxInit(5000, 1500);
-     // wait response is finished
+                  // El tiempo de espera ha finalizado.
      do {
           if (gsm.IsStringReceived("OK\r\n")) {
-               // perfect - we have some response, but what:
+                 // Perfecto - Tenemos una respuesta pero debemos definir de que tipo:
 
-               // there is either NO call:
-               // <CR><LF>OK<CR><LF>
-
-               // or there is at least 1 call
-               // +CLCC: 1,1,4,0,0,"+420XXXXXXXXX",145<CR><LF>
-               // <CR><LF>OK<CR><LF>
+                // No hay ninguna llamada:
+                // <CR><LF>OK<CR><LF>
+                // Hay al menos una llamada:
+                // +CLCC: 1,1,4,0,0,"+420XXXXXXXXX",145<CR><LF>
+                // <CR><LF>OK<CR><LF>
                status = RX_FINISHED;
-               break; // so finish receiving immediately and let's go to
-               // to check response
+               break; 
+                // En ésta instancia termina de recibir e inmediatamente vamos 
+                //a revisar la respuesta.
           }
           status = gsm.IsRxFinished();
      } while (status == RX_NOT_FINISHED);
 
-     // generate tmout 30msec. before next AT command
+                // Ahora es necesario generar un tiempo de espera de 30 msegundos antes 
+                //del siguiente comando AT.
      delay(30);
 
      if (status == RX_FINISHED) {
-          // something was received but what was received?
-          // example: //+CLCC: 1,1,4,0,0,"+420XXXXXXXXX",145
+                // Se recibió algo pero ¿Qué se recibió?
+                // Ejemplo: //+CLCC: 1,1,4,0,0,"+420XXXXXXXXX",145
           // ---------------------------------------------
           if(gsm.IsStringReceived("+CLCC: 1,1,4,0,0")) {
-               // incoming VOICE call - not authorized so far
+               // Llamada de voz entrante - no autorizada hasta ahora.
                // -------------------------------------------
                search_phone_num = 1;
                ret_val = CALL_INCOM_VOICE_NOT_AUTH;
           } else if(gsm.IsStringReceived("+CLCC: 1,1,4,1,0")) {
-               // incoming DATA call - not authorized so far
+               // Llamada de datos entrante - no autorizada hasta ahora.
                // ------------------------------------------
                search_phone_num = 1;
                ret_val = CALL_INCOM_DATA_NOT_AUTH;
           } else if(gsm.IsStringReceived("+CLCC: 1,0,0,0,0")) {
-               // active VOICE call - GSM is caller
+               // Llamada de voz activa - GSM es el que llama.
                // ----------------------------------
                search_phone_num = 1;
                ret_val = CALL_ACTIVE_VOICE;
           } else if(gsm.IsStringReceived("+CLCC: 1,1,0,0,0")) {
-               // active VOICE call - GSM is listener
+               // Llamada de voz activa - GSM es el oyente.
                // -----------------------------------
                search_phone_num = 1;
                ret_val = CALL_ACTIVE_VOICE;
           } else if(gsm.IsStringReceived("+CLCC: 1,1,0,1,0")) {
-               // active DATA call - GSM is listener
+               // Llamada DATOS activa - GSM es oyente.
                // ----------------------------------
                search_phone_num = 1;
                ret_val = CALL_ACTIVE_DATA;
           } else if(gsm.IsStringReceived("+CLCC:")) {
-               // other string is not important for us - e.g. GSM module activate call
-               // etc.
-               // IMPORTANT - each +CLCC:xx response has also at the end
-               // string <CR><LF>OK<CR><LF>
+               // Otra cadena no es importante para nosotros - por ejemplo, Módulo GSM activar llamada, etc.
+               // IMPORTANTE - Cada respuesta +CLCC:xx tambien tiene al final la cadena <CR><LF>OK<CR><LF>.
                ret_val = CALL_OTHERS;
           } else if(gsm.IsStringReceived("OK")) {
-               // only "OK" => there is NO call activity
+               // Solo "OK" => No hay actividad de llamada.
                // --------------------------------------
                ret_val = CALL_NONE;
           }
