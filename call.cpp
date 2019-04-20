@@ -1,13 +1,13 @@
 #include "call.h"
 
 /**********************************************************
-Method checks status of call
-return:
-      CALL_NONE         - no call activity
-      CALL_INCOM_VOICE  - incoming voice
-      CALL_ACTIVE_VOICE - active voice
-      CALL_NO_RESPONSE  - no response to the AT command
-      CALL_COMM_LINE_BUSY - comm line is not free
+Métodos que comprueban el estado de la llamada.
+Regreso:
+      CALL_NONE               - No hay actividad de llamada.
+      CALL_INCOM_VOICE        - Voz entrante.
+      CALL_ACTIVE_VOICE       - Voz activa.
+      CALL_NO_RESPONSE        - No hay respuesta al comando AT.
+      CALL_COMM_LINE_BUSY     - La línea de comunicación no es gratuita.
 **********************************************************/
 byte CallGSM::CallStatus(void)
 {
@@ -17,24 +17,25 @@ byte CallGSM::CallStatus(void)
      gsm.SetCommLineStatus(CLS_ATCMD);
      gsm.SimpleWriteln(F("AT+CPAS"));
 
-     // 5 sec. for initial comm tmout
-     // 50 msec. for inter character timeout
+     // 5 segundos de espera para la comunicación inicial.
+     // 50 msegundos de espera entre caracteres.
+      
      if (RX_TMOUT_ERR == gsm.WaitResp(5000, 50)) {
-          // nothing was received (RX_TMOUT_ERR)
+          // No se recibió nada (RX_TMOUT_ERR)
           // -----------------------------------
           ret_val = CALL_NO_RESPONSE;
      } else {
-          // something was received but what was received?
+          // Se recibió algo pero ¿Qué se recibió?
           // ---------------------------------------------
-          // ready (device allows commands from TA/TE)
+          // Listo (El dispositivo permite comandos desde TA/TE).
           // <CR><LF>+CPAS: 0<CR><LF> <CR><LF>OK<CR><LF>
-          // unavailable (device does not allow commands from TA/TE)
+          // No disponible (El dispositivo no permite comandos de TA/TE).
           // <CR><LF>+CPAS: 1<CR><LF> <CR><LF>OK<CR><LF>
-          // unknown (device is not guaranteed to respond to instructions)
+          // Descononocido (No se garantiza que el dispositivo responda a las instrucciones).
           // <CR><LF>+CPAS: 2<CR><LF> <CR><LF>OK<CR><LF> - NO CALL
-          // ringing
+          // Timbre.
           // <CR><LF>+CPAS: 3<CR><LF> <CR><LF>OK<CR><LF> - NO CALL
-          // call in progress
+          // Llamada en proceso.
           // <CR><LF>+CPAS: 4<CR><LF> <CR><LF>OK<CR><LF> - NO CALL
           if(gsm.IsStringReceived("+CPAS: 0")) {
                // ready - there is no call
