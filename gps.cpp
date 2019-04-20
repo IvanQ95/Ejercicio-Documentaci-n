@@ -200,4 +200,4 @@ double convertLong(char* longString)
      double min = longitude - (100 * deg);                             // Clcula el número de minutos
      longitude = deg + (double) min/60.00;                             // Convierte a formato decimal
      return longitude;
-}
+}//
