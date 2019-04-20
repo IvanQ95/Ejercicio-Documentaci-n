@@ -38,15 +38,15 @@ byte CallGSM::CallStatus(void)
           // Llamada en proceso.
           // <CR><LF>+CPAS: 4<CR><LF> <CR><LF>OK<CR><LF> - NO CALL
           if(gsm.IsStringReceived("+CPAS: 0")) {
-               // ready - there is no call
+               // Listo - no hay llamada.
                // ------------------------
                ret_val = CALL_NONE;
           } else if(gsm.IsStringReceived("+CPAS: 3")) {
-               // incoming call
+               // Llamada entrante.
                // --------------
                ret_val = CALL_INCOM_VOICE;
           } else if(gsm.IsStringReceived("+CPAS: 4")) {
-               // active call
+               // Llamada activa.
                // -----------
                ret_val = CALL_ACTIVE_VOICE;
           }
@@ -58,29 +58,31 @@ byte CallGSM::CallStatus(void)
 }
 
 /**********************************************************
-Method checks status of call(incoming or active)
-and makes authorization with specified SIM positions range
-phone_number: a pointer where the tel. number string of current call will be placed
-              so the space for the phone number string must be reserved - see example
-first_authorized_pos: initial SIM phonebook position where the authorization process
-                      starts
-last_authorized_pos:  last SIM phonebook position where the authorization process
-                      finishes
-                      Note(important):
+El método comprueba el estado de la llamada (Entrante o activa) y realiza la 
+autorización con el rango de posiciones SIM especificadas.
+phone_number: es un puntero donde se colocará la cadena de número de telefono 
+              de la llamada actual por lo tanto, el espacio para la cadena del
+              número de teléfono debe estar reservado (Ver ejemplo).
+first_authorized_pos: Es la posición inicial de la agenda de la SIM donde comienza 
+                      el proceso de autorización.
+last_authorized_pos:  Es la última posición de la agenda de la SIM donde finaliza 
+                      el proceso de autorización.
+                      
+                      Nota(importante):
                       ================
-                      In case first_authorized_pos=0 and also last_authorized_pos=0
-                      the received incoming phone number is NOT authorized at all, so every
-                      incoming is considered as authorized (CALL_INCOM_VOICE_NOT_AUTH is returned)
-return:
-      CALL_NONE                   - no call activity
-      CALL_INCOM_VOICE_AUTH       - incoming voice - authorized
-      CALL_INCOM_VOICE_NOT_AUTH   - incoming voice - not authorized
-      CALL_ACTIVE_VOICE           - active voice
-      CALL_INCOM_DATA_AUTH        - incoming data call - authorized
-      CALL_INCOM_DATA_NOT_AUTH    - incoming data call - not authorized
-      CALL_ACTIVE_DATA            - active data call
-      CALL_NO_RESPONSE            - no response to the AT command
-      CALL_COMM_LINE_BUSY         - comm line is not free
+             En el caso first_authorized_pos=0 y también last_authorized_pos=0,
+             el número de teléfono entrante recibido NO está autorizado en absoluto,
+             por lo que cada entrada se considera autorizada (CALL_INCOM_VOICE_NOT_AUTH se devuelve)
+Regreso:
+      CALL_NONE                   - No hay actividad de llamada.
+      CALL_INCOM_VOICE_AUTH       - Voz entrante - Autorizada.
+      CALL_INCOM_VOICE_NOT_AUTH   - Voz entrante - No autorizada.
+      CALL_ACTIVE_VOICE           - Voz activa.
+      CALL_INCOM_DATA_AUTH        - Llamada de datos entrante - Autorizada.
+      CALL_INCOM_DATA_NOT_AUTH    - Llamada de datos entrante - No autorizada.
+      CALL_ACTIVE_DATA            - Llamada de datos activa.
+      CALL_NO_RESPONSE            - No hay respuesta al comando AT.
+      CALL_COMM_LINE_BUSY         - La línea de comunicación no es gratuita.
 **********************************************************/
 byte CallGSM::CallStatusWithAuth(char *phone_number,
                                  byte first_authorized_pos, byte last_authorized_pos)
