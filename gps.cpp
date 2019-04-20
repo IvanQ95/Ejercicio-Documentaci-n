@@ -12,7 +12,7 @@ char GPSGSM::getBattInf(char *str_perc, char *str_vol)           // Configuraci�
 
      //BCL
      p_char = strchr((char *)(gsm.comm_buf),',');
-     p_char1 = p_char+1;  //we are on the first char of BCS      // Estamos en el primer char de BCS 
+     p_char1 = p_char+1;                                              // Estamos en el primer char de BCS 
      p_char = strchr((char *)(p_char1), ',');
      if (p_char != NULL) {
           *p_char = 0;
@@ -42,7 +42,7 @@ char GPSGSM::getBattTVol(char *str_vol)
 
      //BCL
      p_char = strchr((char *)(gsm.comm_buf),':');
-     p_char1 = p_char+2;  //we are on the first char of BCS
+     p_char1 = p_char+2;                                              // Estamos en el primer char de BCS 
      p_char = strchr((char *)(p_char1), '\r');
      if (p_char != NULL) {
           *p_char = 0;
@@ -93,7 +93,7 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      if(gsm.IsStringReceived("OK"))
           ret_val=1;
 
-     //longitude                                                         //Longitud
+     //Longitud
      p_char = strchr((char *)(gsm.comm_buf),',');
      p_char1 = p_char+1;  //we are on the first char of longitude
      p_char = strchr((char *)(p_char1), ',');
@@ -102,7 +102,7 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      }
      strcpy(str_long, (char *)(p_char1));
 
-     // latitude                                                           //Latitud
+     //Latitud
      p_char++;
      p_char1 = strchr((char *)(p_char), ',');
      if (p_char1 != NULL) {
@@ -110,7 +110,7 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      }
      strcpy(str_lat, (char *)(p_char));
 
-     // altitude                                                           //Altitud
+     //Altitud
      p_char1++;
      p_char = strchr((char *)(p_char1), ',');
      if (p_char != NULL) {
@@ -118,7 +118,7 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      }
      strcpy(str_alt, (char *)(p_char1));
 
-     // UTC time                                                           // Configuración del UTC (Tiempo Universal Coordinado
+     // Configuración del UTC (Tiempo Universal Coordinado
      p_char++;
      p_char1 = strchr((char *)(p_char), ',');
      if (p_char1 != NULL) {
@@ -126,7 +126,9 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      }
      strcpy(str_time, (char *)(p_char));
 
-     // TTFF
+     //-Configuración del Time To First Fix lo que conocidamente se dice "Tiempo para la primera posición".
+     //TTFF es la cantidad de tiempo requerido para que el receptor GPS adquiera las señales de los satélites 
+     //y datos de navegación necesarios para calcular una posición particular.
      p_char1++;
      p_char = strchr((char *)(p_char1), ',');
      if (p_char != NULL) {
@@ -153,36 +155,36 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
 
 void parseTime(char *field, int *time)
 {
-     ////////////////Time////////////                                 //TIEMPO
+     //-TIEMPO-
      char tmp[4];
-     tmp[2]=0; // Init tmp and null terminate                         // Inicia la temporización y la terminación nula
+     tmp[2]=0;                                                        // Inicia la temporización y la terminación nula
      tmp[0] = field[8];
      tmp[1] = field[9];
-     time[0] = atoi(tmp); // Hours                                    //HORAS
+     time[0] = atoi(tmp);                                             //HORAS
      tmp[0] = field[10];
      tmp[1] = field[11];
-     time[1] = atoi(tmp); // Minutes                                  //MINUTOS
+     time[1] = atoi(tmp);                                             //MINUTOS
      tmp[0] = field[12];
      tmp[1] = field[13];
-     time[2] = atoi(tmp); // Seconds                                  //SEGUNDOS
-     /////////////Date///////////////                                 //FECHA
+     time[2] = atoi(tmp);                                             //SEGUNDOS
+     //-FECHA-
      tmp[0] = field[0];
      tmp[1] = field[1];
      tmp[2] = field[2];
      tmp[3] = field[3];
-     tmp[4]=0; // Init tmp and null terminate                         //INICIA TEMPORIZACION CON TERMINACIÓN NULA (SISTEMA DE RELOJ)
-     time[3] = atoi(tmp); // year                                     //DETERMINACIÓN DEL AÑO
+     tmp[4]=0;                                                        //INICIA TEMPORIZACION CON TERMINACIÓN NULA (SISTEMA DE RELOJ)
+     time[3] = atoi(tmp);                                             //DETERMINACIÓN DEL AÑO
      tmp[0] = field[4];
      tmp[1] = field[5];
-     tmp[2]=0; // Init tmp and null terminate                         //INICIA TEMPORIZACION CON TERMINACIÓN NULA (SISTEMA DE RELOJ)    
-     time[4] = atoi(tmp); // month                                    //DETERMINACIÓN DEL MES
+     tmp[2]=0;                                                        //INICIA TEMPORIZACION CON TERMINACIÓN NULA (SISTEMA DE RELOJ)    
+     time[4] = atoi(tmp);                                             //DETERMINACIÓN DEL MES
      tmp[0] = field[6];
      tmp[1] = field[7];
-     tmp[2]=0; // Init tmp and null terminate                         //INICIA TEMPORIZACION CON TERMINACIÓN NULA (SISTEMA DE RELOJ)
-     time[5] = atoi(tmp); // day                                      //DÍA
+     tmp[2]=0;                                                        //INICIA TEMPORIZACION CON TERMINACIÓN NULA (SISTEMA DE RELOJ)
+     time[5] = atoi(tmp);                                             //DÍA
 }
 
-// Read the latitude in decimal format from a GGA string              // Lee la latitud en formato decimal de una cadena GGA
+// Lee la latitud en formato decimal de una cadena GGA
 double convertLat(char* latString)
 {
      double latitude = atof(latString);                               // Convierte a una variable de doble (precisión)
@@ -192,7 +194,7 @@ double convertLat(char* latString)
      return latitude;
 }
 
-// Read the longitude in decimal format from a GGA string             // Lee la longitud en formato decimal de una cadena GGA          
+// Lee la longitud en formato decimal de una cadena GGA          
 double convertLong(char* longString)
 {
      double longitude = atof(longString);                              // Convierte a una variable de doble (precisión)
@@ -200,4 +202,4 @@ double convertLong(char* longString)
      double min = longitude - (100 * deg);                             // Clcula el número de minutos
      longitude = deg + (double) min/60.00;                             // Convierte a formato decimal
      return longitude;
-}//
+}
