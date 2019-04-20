@@ -1,7 +1,7 @@
 #include "call.h"
 
 /**********************************************************
-Métodos que comprueban el estado de la llamada.
+Éste métodos son los que comprueban el estado de la llamada.
 Regreso:
       CALL_NONE               - No hay actividad de llamada.
       CALL_INCOM_VOICE        - Voz entrante.
@@ -58,7 +58,7 @@ byte CallGSM::CallStatus(void)
 }
 
 /**********************************************************
-El método comprueba el estado de la llamada (Entrante o activa) y realiza la 
+Éste método comprueba el estado de la llamada (Entrante o activa) y realiza la 
 autorización con el rango de posiciones SIM especificadas.
 phone_number: es un puntero donde se colocará la cadena de número de telefono 
               de la llamada actual por lo tanto, el espacio para la cadena del
@@ -220,7 +220,7 @@ byte CallGSM::CallStatusWithAuth(char *phone_number,
 }
 
 /**********************************************************
-Método recoge un retorno de llamada entrante:
+Éste método recoge un retorno de llamada entrante:
 **********************************************************/
 void CallGSM::PickUp(void)
 {
@@ -232,7 +232,7 @@ void CallGSM::PickUp(void)
 }
 
 /**********************************************************
-Método cuelga el retorno de la llamada entrante o activa:
+Éste método cuelga el retorno de la llamada entrante o activa:
 **********************************************************/
 void CallGSM::HangUp(void)
 {
@@ -243,7 +243,7 @@ void CallGSM::HangUp(void)
 }
 
 /**********************************************************
-Método llama al número específico
+Éste método llama al número específico
 number_string: puntero a la cadena del número de teléfono.
                 p.ej. gsm. Llamada ("+ 420123456789");
 **********************************************************/
@@ -262,7 +262,7 @@ void CallGSM::Call(char *number_string)
 }
 
 /**********************************************************
-Método llama al número almacenado en la posición SIM especificada
+Éste método llama al número almacenado en la posición SIM especificada
 sim_position: posición en la SIM <1 ...>
                p.ej. gsm. Llamada (1);
 **********************************************************/
