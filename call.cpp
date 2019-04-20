@@ -164,15 +164,17 @@ byte CallGSM::CallStatusWithAuth(char *phone_number,
           }
 
 
-          // now we will search phone num string
+          // Ahora buscaremos el número de teléfono.
           if (search_phone_num) {
-               // extract phone number string
+               // Extraer cadena de número de teléfono.
                // ---------------------------
                p_char = strchr((char *)(gsm.comm_buf),'"');
-               p_char1 = p_char+1; // we are on the first phone number character
+               p_char1 = p_char+1; 
+                // Estamos en el primer número de teléfono.
                p_char = strchr((char *)(p_char1),'"');
                if (p_char != NULL) {
-                    *p_char = 0; // end of string
+                    *p_char = 0; 
+                //Fin de la cadena.
                     strcpy(phone_number, (char *)(p_char1));
                     Serial.print("ATTESO: ");
                     Serial.println(phone_number);
@@ -184,22 +186,23 @@ byte CallGSM::CallStatusWithAuth(char *phone_number,
                          || (ret_val == CALL_INCOM_DATA_NOT_AUTH)) {
 
                     if ((first_authorized_pos == 0) && (last_authorized_pos == 0)) {
-                         // authorization is not required => it means authorization is OK
+                         // No se requiere autorización o que la autorización es correcta.
                          // -------------------------------------------------------------
                          if (ret_val == CALL_INCOM_VOICE_NOT_AUTH) ret_val = CALL_INCOM_VOICE_AUTH;
                          else ret_val = CALL_INCOM_DATA_AUTH;
                     } else {
-                         // make authorization
+                         // Hacer la autorización.
                          // ------------------
                          gsm.SetCommLineStatus(CLS_FREE);
                          for (i = first_authorized_pos; i <= last_authorized_pos; i++) {
                               if (gsm.ComparePhoneNumber(i, phone_number)) {
-                                   // phone numbers are identical
-                                   // authorization is OK
+                                   // Los números de teléfono son idénticos.
+                                   // La autorización es correcta.
                                    // ---------------------------
                                    if (ret_val == CALL_INCOM_VOICE_NOT_AUTH) ret_val = CALL_INCOM_VOICE_AUTH;
                                    else ret_val = CALL_INCOM_DATA_AUTH;
-                                   break;  // and finish authorization
+                                   break;  
+                                   // Aquí termina la autorización.
                               }
                          }
                     }
@@ -207,7 +210,7 @@ byte CallGSM::CallStatusWithAuth(char *phone_number,
           }
 
      } else {
-          // nothing was received (RX_TMOUT_ERR)
+          // Nada fue recibido(RX_TMOUT_ERR)
           // -----------------------------------
           ret_val = CALL_NO_RESPONSE;
      }
@@ -217,8 +220,7 @@ byte CallGSM::CallStatusWithAuth(char *phone_number,
 }
 
 /**********************************************************
-Method picks up an incoming call
-return:
+Método recoge un retorno de llamada entrante:
 **********************************************************/
 void CallGSM::PickUp(void)
 {
