@@ -232,8 +232,7 @@ void CallGSM::PickUp(void)
 }
 
 /**********************************************************
-Method hangs up incoming or active call
-return:
+Método cuelga el retorno de la llamada entrante o activa:
 **********************************************************/
 void CallGSM::HangUp(void)
 {
@@ -244,9 +243,9 @@ void CallGSM::HangUp(void)
 }
 
 /**********************************************************
-Method calls the specific number
-number_string: pointer to the phone number string
-               e.g. gsm.Call("+420123456789");
+Método llama al número específico
+number_string: puntero a la cadena del número de teléfono.
+                p.ej. gsm. Llamada ("+ 420123456789");
 **********************************************************/
 void CallGSM::Call(char *number_string)
 {
@@ -263,9 +262,9 @@ void CallGSM::Call(char *number_string)
 }
 
 /**********************************************************
-Method calls the number stored at the specified SIM position
-sim_position: position in the SIM <1...>
-              e.g. gsm.Call(1);
+Método llama al número almacenado en la posición SIM especificada
+sim_position: posición en la SIM <1 ...>
+               p.ej. gsm. Llamada (1);
 **********************************************************/
 void CallGSM::Call(int sim_position)
 {
@@ -276,8 +275,8 @@ void CallGSM::Call(int sim_position)
      gsm.SimpleWrite(sim_position);
      gsm.SimpleWriteln(F(";"));
 
-     // 10 sec. for initial comm tmout
-     // 50 msec. for inter character timeout
+     // 10 segundos para el inicio de la comunicación.
+     // 50 msegundos de espera entre caracteres.
      gsm.WaitResp(10000, 50);
 
      gsm.SetCommLineStatus(CLS_FREE);
@@ -321,7 +320,8 @@ char CallGSM::DetDTMF()
           //Serial.println("end");
           p_char = strstr((char *)(gsm.comm_buf),"+DTMF:");
           if (p_char != NULL) {
-               p_char1 = p_char+6;  //we are on the first char of BCS
+               p_char1 = p_char+6;  
+          // Estamos en el primer char de BCS.
                dtmf_char = *p_char1;
           }
      }
