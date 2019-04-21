@@ -5,9 +5,9 @@ char GPSGSM::getBattInf(char *str_perc, char *str_vol)           // Configuraci�
      char *p_char;
      char *p_char1; 
 
-     gsm.SimpleWriteln("AT+CBC"); //////
-     gsm.WaitResp(5000, 100, "OK");
-     if(gsm.IsStringReceived("+CBC"))
+     gsm.SimpleWriteln("AT+CBC"); ////// Enviar el comando serie y espera la respuesta
+     gsm.WaitResp(5000, 100, "OK"); //Espera la respuesta  
+     if(gsm.IsStringReceived("+CBC")) // Identifica lo que recibe
           ret_val=1;
 
      //BCL
@@ -53,7 +53,7 @@ char GPSGSM::getBattTVol(char *str_vol)
 
 char GPSGSM::attachGPS()
 {
-     if(AT_RESP_ERR_DIF_RESP == gsm.SendATCmdWaitResp("AT+CGPSPWR=1", 500, 100, "OK", 5))
+     if(AT_RESP_ERR_DIF_RESP == gsm.SendATCmdWaitResp("AT+CGPSPWR=1", 500, 100, "OK", 5)) // AT+CGPSPWR=1 Activa el GPS 
           return 0;
      if(AT_RESP_ERR_DIF_RESP == gsm.SendATCmdWaitResp("AT+CGPSRST=1", 500, 100, "OK", 5))
           return 0;
@@ -62,7 +62,7 @@ char GPSGSM::attachGPS()
 
 char GPSGSM::deattachGPS()
 {
-     if(AT_RESP_ERR_DIF_RESP == gsm.SendATCmdWaitResp("AT+CGPSPWR=0", 500, 100, "OK", 5))
+     if(AT_RESP_ERR_DIF_RESP == gsm.SendATCmdWaitResp("AT+CGPSPWR=0", 500, 100, "OK", 5))//AT+CGPSPWR=0 Cerrar el GPS
           return 0;
      return 1;
 }
@@ -70,7 +70,7 @@ char GPSGSM::deattachGPS()
 char GPSGSM::getStat()
 {
      char ret_val=-1;
-     gsm.SimpleWriteln("AT+CGPSSTATUS?");
+     gsm.SimpleWriteln("AT+CGPSSTATUS?"); // AT+CGPSSTATUS? Comprueba que el GPS ha encontrado la red.
      gsm.WaitResp(5000, 100, "OK");
      if(gsm.IsStringReceived("Unknown")||gsm.IsStringReceived("unknown"))
           ret_val=0;
@@ -88,14 +88,14 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      char ret_val=0;
      char *p_char;
      char *p_char1;
-     gsm.SimpleWriteln("AT+CGPSINF=0");
+     gsm.SimpleWriteln("AT+CGPSINF=0"); // AT+CGPSINF=0 Obtiene los datos del GPS:  Modo,Latitud,Longitud,Altitud,etc
      gsm.WaitResp(5000, 100, "OK");
      if(gsm.IsStringReceived("OK"))
           ret_val=1;
 
      //Longitud
      p_char = strchr((char *)(gsm.comm_buf),',');
-     p_char1 = p_char+1;  //we are on the first char of longitude
+     p_char1 = p_char+1;  //Estamos en el primer char de longitud
      p_char = strchr((char *)(p_char1), ',');
      if (p_char != NULL) {
           *p_char = 0;
@@ -142,7 +142,7 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
           *p_char1 = 0;
      }
 
-     // speed
+     // Velocidadº1º
      p_char1++;
      p_char = strchr((char *)(p_char1), ',');
      if (p_char != NULL) {
