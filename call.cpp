@@ -1,7 +1,7 @@
 #include "call.h"
 
 /**********************************************************
-Éste métodos son los que comprueban el estado de la llamada.
+Éstos métodos son los que comprueban el estado de la llamada.
 Regreso:
       CALL_NONE               - No hay actividad de llamada.
       CALL_INCOM_VOICE        - Voz entrante.
