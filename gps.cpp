@@ -3,9 +3,9 @@ char GPSGSM::getBattInf(char *str_perc, char *str_vol)           // Configuraci√
 {
      char ret_val=0;
      char *p_char;
-     char *p_char1;
+     char *p_char1; 
 
-     gsm.SimpleWriteln("AT+CBC");
+     gsm.SimpleWriteln("AT+CBC"); //////
      gsm.WaitResp(5000, 100, "OK");
      if(gsm.IsStringReceived("+CBC"))
           ret_val=1;
